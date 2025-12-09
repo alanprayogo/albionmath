@@ -2,7 +2,7 @@
     <!-- Filter -->
     <div class="mb-6 flex flex-col gap-4 md:flex-row">
         {{-- Select Type --}}
-        <select wire:model.live="type" class="select select-bordered w-full md:w-auto">
+        <select wire:model.live="type" class="select select-bordered md:w-42 w-full">
             <option value="">All Types</option>
             @foreach ($typeOptions as $typeOption)
                 <option value="{{ $typeOption }}">{{ ucfirst($typeOption) }}</option>
@@ -10,7 +10,7 @@
         </select>
 
         {{-- Select Category --}}
-        <select wire:model.live="category" class="select select-bordered w-full md:w-auto"
+        <select wire:model.live="category" class="select select-bordered md:w-42 w-full"
             {{ empty($categoryOptions) ? 'disabled' : '' }}>
             <option value="">All Categories</option>
             @foreach ($categoryOptions as $cat)
@@ -19,7 +19,7 @@
         </select>
 
         {{-- Select Subcategory --}}
-        <select wire:model.live="subcategory" class="select select-bordered w-full md:w-auto"
+        <select wire:model.live="subcategory" class="select select-bordered md:w-42 w-full"
             {{ empty($subcategoryOptions) ? 'disabled' : '' }}>
             <option value="">All Subcategories</option>
             @foreach ($subcategoryOptions as $sub)
@@ -28,7 +28,7 @@
         </select>
 
         {{-- Select Tier --}}
-        <select wire:model.live="tier" class="select select-bordered w-full md:w-auto">
+        <select wire:model.live="tier" class="select select-bordered md:w-42 w-full">
             <option value="">All Tiers</option>
             @for ($i = 1; $i <= 8; $i++)
                 <option value="{{ $i }}.0">T{{ $i }}</option>

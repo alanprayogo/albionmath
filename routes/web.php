@@ -32,3 +32,7 @@ Route::get('/crafting', function () {
 Route::get('/refining', function () {
     return view('refining');
 })->name('refining');
+
+Route::get('/meta', function () {
+    return view('meta');
+})->name('meta');

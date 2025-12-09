@@ -6,7 +6,7 @@
             <a href="{{ route('home') }}" class="btn btn-ghost btn-md">
                 ← Back to Home
             </a>
-            <h1 class="mx-auto text-3xl font-bold">🔥 Refining Albion Online</h1>
+            <h1 class="mx-auto text-3xl font-bold">📈 Meta Item Albion Online</h1>
         </div>
 
         <p>Coming soon...</p>

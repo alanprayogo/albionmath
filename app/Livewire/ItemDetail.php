@@ -12,11 +12,17 @@ class ItemDetail extends Component
     public $selectedTier = '';
     public $selectedQuality = '';
     public $selectedEnchant = '';
+    public $openSpells = []; // untuk collapse individual spell
 
     public function mount($type, $itemId)
     {
-        $this->type = $type;
+        $this->type = $type;        // ✅ Simpan ke public property
         $this->itemId = $itemId;
+        $this->openSpells = [];
+
+        // Set default quality & enchant
+        $this->selectedQuality = 'Normal';
+        $this->selectedEnchant = '0';
     }
 
     public function getStatsDataProperty()
@@ -100,12 +106,28 @@ class ItemDetail extends Component
         return $collection->first();
     }
 
+    public function getSpellsDataProperty()
+    {
+        $service = new AlbionApiService();
+        return $service->getItemSpells($this->type, $this->itemId);
+    }
+
+    public function toggleSpell($spellId)
+    {
+        if (in_array($spellId, $this->openSpells)) {
+            $this->openSpells = array_filter($this->openSpells, fn($id) => $id != $spellId);
+        } else {
+            $this->openSpells[] = $spellId;
+        }
+    }
+
     public function render()
     {
         return view('livewire.item-detail', [
             'stat' => $this->filteredStat,
             'baseItem' => $this->baseItem,
             'hasDetailedStats' => !empty($this->statsData),
+            'spellsData' => $this->spellsData, // ✅ Kirim ke view
             'tierOptions' => $this->tierOptions,
             'qualityOptions' => $this->qualityOptions,
             'enchantOptions' => $this->enchantOptions,

@@ -181,4 +181,23 @@ class AlbionApiService
 
         return $allItems;
     }
+
+    public function getItemSpells(string $type, int $itemId): array
+    {
+        $validTypes = ['weapon', 'armor', 'accessory'];
+        if (!in_array($type, $validTypes)) {
+            return [];
+        }
+
+        $url = "{$this->baseUrl}/spells/{$type}/{$itemId}";
+
+        return Cache::remember("albion_spells_{$type}_{$itemId}", now()->addHour(), function () use ($url) {
+            $response = Http::timeout(10)->get($url);
+            if ($response->successful()) {
+                $json = $response->json();
+                return $json['data'] ?? []; // ✅ Ambil ['data']
+            }
+            return [];
+        });
+    }
 }

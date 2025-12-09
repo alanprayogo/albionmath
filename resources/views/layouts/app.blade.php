@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Albion Profit Calculator</title>
+    <title>Albion Math</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
 
-<body class="bg-base-100 min-h-screen">
-    <div class="container mx-auto p-4">
+<body class="min-h-screen bg-base-100">
+    <div class="container p-4 mx-auto">
         @yield('content')
     </div>
     @livewireScripts

@@ -17,10 +17,14 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::get('/database', function () {
-    return view('database');
-})->name('database');
+Route::get('/databook', function () {
+    return view('databook');
+})->name('databook');
 
-Route::get('/calculator', function () {
-    return view('calculator');
-})->name('calculator');
+Route::get('/crafting', function () {
+    return view('crafting');
+})->name('crafting');
+
+Route::get('/refining', function () {
+    return view('refining');
+})->name('refining');

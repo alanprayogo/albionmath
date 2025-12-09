@@ -34,16 +34,25 @@
                 <option value="{{ $i }}.0">T{{ $i }}</option>
             @endfor
         </select>
-
-        <input type="text" placeholder="Cari item..." wire:model.live="search" class="input input-bordered w-full" />
+        <div class="relative w-full">
+            <input type="text" placeholder="Cari item..." wire:model.live="search"
+                class="input input-bordered w-full pr-10" />
+            <span class="absolute right-3 top-1/2 -translate-y-1/2 transform text-gray-400">
+                🔍
+            </span>
+        </div>
     </div>
 
     <!-- Daftar Item -->
     @if (!empty($items))
         <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
             @foreach ($items as $item)
-                <a href="{{ route('item.detail', ['type' => $item['category']['type'], 'id' => $item['id']]) }}"
-                    class="block">
+                @php
+                    // Tentukan type untuk URL
+                    $itemType = $item['original_type'] ?? ($item['category']['type'] ?? 'weapon');
+                @endphp
+
+                <a href="{{ route('item.detail', ['type' => $itemType, 'id' => $item['id']]) }}" class="block">
                     <div
                         class="bg-base-100 flex items-center gap-3 rounded-lg p-3 shadow transition-shadow hover:shadow-md">
                         <div class="h-12 w-12 flex-shrink-0">

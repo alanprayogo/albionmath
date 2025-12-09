@@ -162,4 +162,23 @@ class AlbionApiService
 
         return null;
     }
+
+    /**
+     * Ambil semua item dari semua tipe
+     */
+    public function getAllItems(): array
+    {
+        $allItems = [];
+
+        foreach ($this->typeToEndpoint as $type => $endpoint) {
+            $items = $this->getItemsByType($type);
+            // Tambahkan info type ke setiap item (untuk navigasi detail)
+            foreach ($items as &$item) {
+                $item['original_type'] = $type;
+            }
+            $allItems = array_merge($allItems, $items);
+        }
+
+        return $allItems;
+    }
 }

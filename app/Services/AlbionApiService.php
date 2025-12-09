@@ -9,41 +9,32 @@ class AlbionApiService
 {
     protected string $baseUrl = 'https://api.openalbion.com/api/v3';
 
-    /**
-     * Ambil daftar kategori dari API (dengan caching 1 jam)
-     */
+    // Mapping antara "type" di kategori dan endpoint API
+    protected array $typeToEndpoint = [
+        'weapon'    => 'weapons',
+        'armor'     => 'armors',
+        'accessory' => 'accessories',
+        'consumable'=> 'consumables',
+        // tambahkan lainnya jika diperlukan
+    ];
+
     public function getCategories(): array
     {
         return Cache::remember('albion_categories', now()->addHour(), function () {
             $response = Http::timeout(10)->get("{$this->baseUrl}/categories");
-
-            if ($response->failed()) {
-                // Jika API error, return data kosong agar tidak crash
-                return [];
-            }
-
-            $data = $response->json();
-
-            // Pastikan format sesuai: ada key "data"
-            return $data['data'] ?? [];
+            return $response->successful() ? ($response->json()['data'] ?? []) : [];
         });
     }
 
-    /**
-     * Ekstrak daftar unik "type" dari semua kategori & subkategori
-     */
     public function getCategoryTypes(): array
     {
         $categories = $this->getCategories();
         $types = [];
 
         foreach ($categories as $category) {
-            // Tambahkan type dari kategori utama
             if (!empty($category['type'])) {
                 $types[] = $category['type'];
             }
-
-            // Tambahkan type dari subkategori
             if (!empty($category['subcategories'])) {
                 foreach ($category['subcategories'] as $sub) {
                     if (!empty($sub['type'])) {
@@ -53,33 +44,38 @@ class AlbionApiService
             }
         }
 
-        // Hapus duplikat dan reset index
         return array_values(array_unique($types));
     }
 
-    /**
-     * Ambil daftar kategori utama (bukan subkategori) berdasarkan type
-     */
     public function getMainCategoriesByType(string $type): array
     {
         $categories = $this->getCategories();
-
         return collect($categories)
             ->filter(fn($cat) => ($cat['type'] ?? null) === $type)
             ->values()
             ->all();
     }
 
-    /**
-     * Ambil daftar subkategori berdasarkan ID kategori utama
-     */
     public function getSubcategoriesByCategoryId(int $categoryId): array
     {
         $categories = $this->getCategories();
-
-        $category = collect($categories)
-            ->first(fn($cat) => ($cat['id'] ?? null) === $categoryId);
-
+        $category = collect($categories)->first(fn($cat) => ($cat['id'] ?? null) === $categoryId);
         return $category['subcategories'] ?? [];
+    }
+
+    /**
+     * Ambil item berdasarkan type (weapon, armor, dll.)
+     */
+    public function getItemsByType(string $type): array
+    {
+        if (!isset($this->typeToEndpoint[$type])) {
+            return [];
+        }
+
+        $endpoint = $this->typeToEndpoint[$type];
+        return Cache::remember("albion_items_{$type}", now()->addHour(), function () use ($endpoint) {
+            $response = Http::timeout(10)->get("{$this->baseUrl}/{$endpoint}");
+            return $response->successful() ? ($response->json()['data'] ?? []) : [];
+        });
     }
 }

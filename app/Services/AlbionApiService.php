@@ -78,4 +78,88 @@ class AlbionApiService
             return $response->successful() ? ($response->json()['data'] ?? []) : [];
         });
     }
+
+    /**
+     * Ambil dan flatten semua varian (quality + enchantment) untuk item tertentu
+     */
+    public function getItemStats(string $type, int $itemId): array
+    {
+        $typeMap = [
+            'weapon' => 'weapon',
+            'armor' => 'armor',
+            'accessory' => 'accessory',
+            'consumable' => 'consumable',
+        ];
+
+        if (!isset($typeMap[$type])) {
+            return [];
+        }
+
+        $path = $typeMap[$type];
+        $url = "{$this->baseUrl}/{$type}-stats/{$path}/{$itemId}";
+
+        return Cache::remember("albion_item_stats_{$type}_{$itemId}", now()->addHour(), function () use ($url, $type) {
+            $response = Http::timeout(10)->get($url);
+
+            if (!$response->successful()) {
+                return [];
+            }
+
+            $responseData = $response->json();
+            $rawData = $responseData['data'] ?? [];
+
+            $flattened = [];
+
+            foreach ($rawData as $enchantGroup) {
+                $enchantment = $enchantGroup['enchantment'] ?? 0;
+                $baseIcon = $enchantGroup['icon'] ?? '';
+
+                if (!empty($enchantGroup['stats'])) {
+                    foreach ($enchantGroup['stats'] as $qualityStat) {
+                        // 🔥 Ambil data item dari key yang sesuai tipe
+                        $itemKey = $type; // 'weapon', 'armor', dll.
+                        $itemData = $qualityStat[$itemKey] ?? [];
+
+                        $flattened[] = [
+                            'enchantment' => $enchantment,
+                            'quality' => $qualityStat['quality'] ?? 'Normal',
+                            'item' => $itemData, // ← gunakan 'item' sebagai key umum
+                            'stats' => $qualityStat['stats'] ?? [],
+                            'icon' => $itemData['icon'] ?? $baseIcon,
+                            'type' => $type,
+                        ];
+                    }
+                }
+            }
+
+            return $flattened;
+        });
+    }
+
+    /**
+     * Ambil data dasar satu item berdasarkan type dan ID
+     */
+    public function getBaseItem(string $type, int $itemId): ?array
+    {
+        if (!isset($this->typeToEndpoint[$type])) {
+            return null;
+        }
+
+        $endpoint = $this->typeToEndpoint[$type];
+        $url = "{$this->baseUrl}/{$endpoint}";
+
+        $items = Cache::remember("albion_items_{$type}", now()->addHour(), function () use ($url) {
+            $response = Http::timeout(10)->get($url);
+            return $response->successful() ? ($response->json()['data'] ?? []) : [];
+        });
+
+        // Cari item dengan ID yang cocok
+        foreach ($items as $item) {
+            if (($item['id'] ?? null) == $itemId) {
+                return $item;
+            }
+        }
+
+        return null;
+    }
 }

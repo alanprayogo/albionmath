@@ -21,6 +21,10 @@ Route::get('/databook', function () {
     return view('databook');
 })->name('databook');
 
+Route::get('/item/{type}/{id}', function (string $type, int $id) {
+    return view('item-detail', compact('type', 'id'));
+})->name('item.detail');
+
 Route::get('/crafting', function () {
     return view('crafting');
 })->name('crafting');

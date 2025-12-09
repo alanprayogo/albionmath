@@ -2,34 +2,52 @@
 
 namespace App\Livewire;
 
+use App\Services\AlbionApiService;
 use Livewire\Component;
 
 class ItemList extends Component
 {
     public $search = '';
-    public $category = 'all';
+    public $type = '';
+    public $category = '';      // ini sekarang berisi ID kategori (integer)
+    public $subcategory = '';   // nanti berisi ID subkategori
+    public $tier = '';
+    public $quality = '';
+    public $enhancement = '';
 
-    // Getter untuk data item (dengan filter)
-    public function getItemsProperty()
+    public function getTypeOptionsProperty()
     {
-        $items = [
-            ['id' => 1, 'name' => 'T4 Leather Armor', 'tier' => 4, 'type' => 'armor', 'price' => 12500],
-            ['id' => 2, 'name' => 'T5 Steel Sword', 'tier' => 5, 'type' => 'weapon', 'price' => 28000],
-            ['id' => 3, 'name' => 'T3 Hide', 'tier' => 3, 'type' => 'material', 'price' => 1200],
-            ['id' => 4, 'name' => 'T6 Royal Armor', 'tier' => 6, 'type' => 'armor', 'price' => 85000],
-        ];
+        $service = new AlbionApiService();
+        return $service->getCategoryTypes();
+    }
 
-        return collect($items)
-            ->filter(function ($item) {
-                return str_contains(strtolower($item['name']), strtolower($this->search));
-            })
-            ->values();
+    public function getCategoryOptionsProperty()
+    {
+        if (empty($this->type)) {
+            return [];
+        }
+
+        $service = new AlbionApiService();
+        return $service->getMainCategoriesByType($this->type);
+    }
+
+    // Ambil subkategori berdasarkan kategori yang dipilih
+    public function getSubcategoryOptionsProperty()
+    {
+        if (empty($this->category) || !is_numeric($this->category)) {
+            return [];
+        }
+
+        $service = new AlbionApiService();
+        return $service->getSubcategoriesByCategoryId((int) $this->category);
     }
 
     public function render()
     {
         return view('livewire.item-list', [
-            'items' => $this->items
+            'typeOptions' => $this->typeOptions,
+            'categoryOptions' => $this->categoryOptions,
+            'subcategoryOptions' => $this->subcategoryOptions,
         ]);
     }
 }

@@ -29,6 +29,10 @@ Route::get('/crafting', function () {
     return view('crafting');
 })->name('crafting');
 
+Route::get('/crafting/{type}/{id}', function (string $type, int $id) {
+    return view('crafting-calculator', compact('type', 'id'));
+})->name('crafting-calculator');
+
 Route::get('/refining', function () {
     return view('refining');
 })->name('refining');

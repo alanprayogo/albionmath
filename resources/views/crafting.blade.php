@@ -9,6 +9,6 @@
             <h1 class="mx-auto text-3xl font-bold">🛠️ Crafting Profit Calculator Albion Online</h1>
         </div>
 
-        @livewire('profit-calculator')
+        @livewire('crafting-item-list')
     </div>
 @endsection

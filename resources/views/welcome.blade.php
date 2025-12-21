@@ -3,7 +3,7 @@
 @section('content')
     <div class="mb-10 text-center">
         <h1 class="text-4xl font-bold text-primary">Albion Math</h1>
-        <p class="max-w-2xl mx-auto mt-2 text-lg text-gray-100">
+        <p class="max-w-2xl mx-auto mt-2 text-lg ">
             Maximize your Albion Online exploration experience with four powerful modules:
             <strong>Databook Item</strong> for exploring detailed item information,
             <strong>Crafting Calculator</strong> for accurately calculating crafting profits,

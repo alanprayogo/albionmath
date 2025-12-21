@@ -53,7 +53,7 @@
                         class="flex items-center gap-3 p-3 transition-shadow rounded-lg shadow bg-base-100 hover:shadow-md">
                         <div class="flex-shrink-0 w-12 h-12">
                             <img src="{{ $item['icon'] }}" alt="{{ $item['name'] }}"
-                                class="object-contain w-full h-full bg-gray-100 rounded"
+                                class="object-contain w-full h-full rounded"
                                 onerror="this.src='https://via.placeholder.com/50?text=NA'" />
                         </div>
                         <div class="flex-1 min-w-0">

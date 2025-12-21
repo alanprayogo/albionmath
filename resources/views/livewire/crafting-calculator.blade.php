@@ -10,7 +10,7 @@
         <div class="py-10 text-center">
             <div class="flex flex-col items-center gap-4">
                 <img src="{{ $itemData['icon'] ?? 'https://via.placeholder.com/64?text=Item' }}"
-                    alt="{{ $itemData['name'] ?? 'Item' }}" class="h-16 w-16 rounded bg-gray-100 object-contain"
+                    alt="{{ $itemData['name'] ?? 'Item' }}" class="object-contain w-16 h-16 rounded"
                     onerror="this.src='https://via.placeholder.com/64?text=Item'" />
                 <div>
                     <h2 class="text-xl font-bold">{{ $itemData['name'] ?? 'Item' }}</h2>
@@ -23,14 +23,14 @@
     @endif
 
     <!-- Layout Utama -->
-    <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2">
+    <div class="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
         <!-- Kiri: Item Info + Form -->
         <div>
             <!-- Header -->
-            <div class="mb-6 flex flex-col items-center gap-4 sm:flex-row">
+            <div class="flex flex-col items-center gap-4 mb-6 sm:flex-row">
                 <img src="{{ $itemData['icon'] ?? 'https://via.placeholder.com/64?text=Item' }}"
                     alt="{{ $recipe['name'] ?? ($itemData['name'] ?? 'Item') }}"
-                    class="h-16 w-16 rounded bg-gray-100 object-contain"
+                    class="object-contain w-16 h-16 rounded"
                     onerror="this.src='https://via.placeholder.com/64?text=Item'" />
                 <div class="text-center sm:text-left">
                     <h2 class="text-xl font-bold">{{ $recipe['name'] ?? ($itemData['name'] ?? 'Item') }}</h2>
@@ -49,10 +49,10 @@
             <!-- Enchantment -->
             @if (count($availableEnchants) > 1)
                 <div class="mb-6">
-                    <label class="label mb-2">
+                    <label class="mb-2 label">
                         <span class="label-text">Enchantment Level</span>
                     </label>
-                    <select wire:model.live="selectedEnchant" class="select select-bordered w-32">
+                    <select wire:model.live="selectedEnchant" class="w-32 select select-bordered">
                         @foreach ($availableEnchants as $enchant)
                             <option value="{{ $enchant }}">+{{ $enchant }}</option>
                         @endforeach
@@ -61,7 +61,7 @@
             @endif
 
             <!-- Input Form -->
-            <div class="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div class="grid grid-cols-1 gap-4 mb-6 md:grid-cols-2">
                 <div class="form-control">
                     <label class="label">
                         <span class="label-text">Jumlah Crafting</span>
@@ -104,7 +104,7 @@
                             <div class="flex items-center justify-between">
                                 <span>{{ $mat['name'] }} (x{{ $mat['amount'] }})</span>
                                 <input type="number" wire:model.live.number="materialPrices.{{ $mat['unique_name'] }}"
-                                    class="input input-bordered input-sm w-32 text-right" placeholder="0" />
+                                    class="w-32 text-right input input-bordered input-sm" placeholder="0" />
                             </div>
                         @endif
                     @endforeach
@@ -117,25 +117,25 @@
         </div>
 
         <!-- Kanan: Hasil Perhitungan -->
-        <div class="bg-base-200 rounded-lg p-4">
+        <div class="p-4 rounded-lg bg-base-200">
             <h3 class="mb-3 text-lg font-bold">Hasil Perhitungan</h3>
-            <div class="mb-3 grid grid-cols-2 gap-2 text-sm">
+            <div class="grid grid-cols-2 gap-2 mb-3 text-sm">
                 <div>Biaya Material:</div>
-                <div class="text-right font-medium">{{ number_format($effectiveMaterialCost, 0, ',', '.') }} silver
+                <div class="font-medium text-right">{{ number_format($effectiveMaterialCost, 0, ',', '.') }} silver
                 </div>
 
                 <div>Biaya Emas:</div>
-                <div class="text-right font-medium">{{ number_format($goldCost, 0, ',', '.') }} silver</div>
+                <div class="font-medium text-right">{{ number_format($goldCost, 0, ',', '.') }} silver</div>
 
                 <div>Usage Fee:</div>
-                <div class="text-right font-medium">{{ number_format($usageFee, 0, ',', '.') }} silver</div>
+                <div class="font-medium text-right">{{ number_format($usageFee, 0, ',', '.') }} silver</div>
 
                 <div class="font-semibold">Total Biaya:</div>
-                <div class="text-right font-semibold">{{ number_format($totalCost, 0, ',', '.') }} silver</div>
+                <div class="font-semibold text-right">{{ number_format($totalCost, 0, ',', '.') }} silver</div>
             </div>
 
-            <div class="mt-3 border-t pt-3">
-                <div class="mb-2 grid grid-cols-2 gap-2 text-sm">
+            <div class="pt-3 mt-3 border-t">
+                <div class="grid grid-cols-2 gap-2 mb-2 text-sm">
                     <div>Total Item Dihasilkan:</div>
                     <div class="text-right">{{ number_format($totalOutput, 0, ',', '.') }}</div>
 
@@ -149,10 +149,10 @@
                     <div class="text-right text-red-600">-{{ number_format($sellOrderFee, 0, ',', '.') }} silver</div>
 
                     <div class="font-semibold">Pendapatan Bersih:</div>
-                    <div class="text-right font-semibold">{{ number_format($netIncome, 0, ',', '.') }} silver</div>
+                    <div class="font-semibold text-right">{{ number_format($netIncome, 0, ',', '.') }} silver</div>
                 </div>
 
-                <div class="mt-4 flex justify-between border-t pt-2">
+                <div class="flex justify-between pt-2 mt-4 border-t">
                     <span class="text-lg font-bold">Profit:</span>
                     <span class="{{ $profit >= 0 ? 'text-green-600' : 'text-red-600' }} text-lg font-bold">
                         {{ number_format($profit, 0, ',', '.') }} silver

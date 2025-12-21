@@ -4,25 +4,25 @@
         <div class="flex flex-col gap-6 md:flex-row">
             <div class="flex-shrink-0">
                 <img src="{{ $stat['icon'] }}" alt="{{ $stat['item']['name'] ?? 'Item' }}"
-                    class="h-32 w-32 rounded bg-gray-100 object-contain" />
+                    class="object-contain w-32 h-32 rounded" />
             </div>
             <div class="flex-1">
                 <h2 class="text-xl font-bold">{{ $stat['item']['name'] ?? '—' }}</h2>
-                <p class="text-gray-100">
+                <p class="">
                     Tier: T{{ number_format((float) ($stat['item']['tier'] ?? 0), 0, '.', '') }} •
                     Quality: {{ $stat['quality'] ?? '—' }} •
                     Enchant: +{{ $stat['enchantment'] ?? '0' }}
                 </p>
 
-                <div class="mt-4 flex flex-wrap gap-3">
+                <div class="flex flex-wrap gap-3 mt-4">
 
-                    <select wire:model.live="selectedQuality" class="select select-bordered text-sm">
+                    <select wire:model.live="selectedQuality" class="text-sm select select-bordered">
                         @foreach ($qualityOptions as $q)
                             <option value="{{ $q }}">{{ $q }}</option>
                         @endforeach
                     </select>
 
-                    <select wire:model.live="selectedEnchant" class="select select-bordered text-sm">
+                    <select wire:model.live="selectedEnchant" class="text-sm select select-bordered">
                         @foreach ($enchantOptions as $e)
                             <option value="{{ $e }}">+{{ $e }}</option>
                         @endforeach
@@ -35,7 +35,7 @@
                         <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
                             @foreach ($stat['stats'] as $s)
                                 <div class="flex justify-between text-sm">
-                                    <span class="text-gray-100">{{ $s['name'] ?? '—' }}:</span>
+                                    <span class="">{{ $s['name'] ?? '—' }}:</span>
                                     <span class="font-medium">{{ $s['value'] ?? '—' }}</span>
                                 </div>
                             @endforeach
@@ -48,15 +48,15 @@
         <div class="flex flex-col gap-6 md:flex-row">
             <div class="flex-shrink-0">
                 <img src="{{ $baseItem['icon'] }}" alt="{{ $baseItem['name'] }}"
-                    class="h-32 w-32 rounded bg-gray-100 object-contain" />
+                    class="object-contain w-32 h-32 rounded" />
             </div>
             <div class="flex-1">
                 <h2 class="text-xl font-bold">{{ $baseItem['name'] }}</h2>
-                <p class="text-gray-100">
+                <p class="">
                     Tier: T{{ number_format((float) ($baseItem['tier'] ?? 0), 0, '.', '') }} •
                     Category: {{ $baseItem['subcategory']['name'] ?? '—' }}
                 </p>
-                <div class="mt-4 text-gray-100">
+                <div class="mt-4 ">
                     <em>Data statistik detail tidak tersedia untuk item ini.</em>
                 </div>
             </div>
@@ -75,22 +75,22 @@
             {{-- 🔥 GRID RESPONSIF UNTUK GRUP SPELL --}}
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                 @foreach ($spellsData as $spellGroup)
-                    <div class="rounded-lg border">
-                        <div class="bg-base-200 px-4 py-2 font-medium">
+                    <div class="border rounded-lg">
+                        <div class="px-4 py-2 font-medium bg-base-200">
                             {{ $spellGroup['slot'] }} ({{ count($spellGroup['spells'] ?? []) }})
                         </div>
-                        <div class="space-y-3 p-4">
+                        <div class="p-4 space-y-3">
                             {{-- Loop spell dalam grup (tetap 1 kolom) --}}
                             @foreach ($spellGroup['spells'] as $spell)
                                 @php
                                     $isOpen = in_array($spell['id'], $this->openSpells);
                                 @endphp
 
-                                <div class="overflow-hidden rounded-lg border">
-                                    <div class="bg-base-100 hover:bg-base-200 flex cursor-pointer items-center gap-3 p-3"
+                                <div class="overflow-hidden border rounded-lg">
+                                    <div class="flex items-center gap-3 p-3 cursor-pointer bg-base-100 hover:bg-base-200"
                                         wire:click="toggleSpell({{ $spell['id'] }})">
                                         <img src="{{ $spell['icon'] }}" alt="{{ $spell['name'] }}"
-                                            class="h-10 w-10 rounded bg-gray-100 object-contain"
+                                            class="object-contain w-10 h-10 rounded"
                                             onerror="this.src='https://via.placeholder.com/40?text=S'" />
                                         <span class="font-medium">{{ $spell['name'] }}</span>
                                         <span class="ml-auto text-gray-500">
@@ -99,14 +99,14 @@
                                     </div>
 
                                     @if ($isOpen)
-                                        <div class="bg-base-200 border-t p-3">
-                                            <p class="mb-3 text-sm text-gray-100">{{ $spell['description'] ?? '—' }}
+                                        <div class="p-3 border-t bg-base-200">
+                                            <p class="mb-3 text-sm ">{{ $spell['description'] ?? '—' }}
                                             </p>
                                             @if (!empty($spell['attributes']))
-                                                <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
+                                                <div class="grid grid-cols-2 text-xs gap-x-4 gap-y-2">
                                                     @foreach ($spell['attributes'] as $attr)
                                                         <div class="flex justify-between">
-                                                            <span class="text-gray-100">{{ $attr['name'] }}:</span>
+                                                            <span class="">{{ $attr['name'] }}:</span>
                                                             <span class="font-medium">{{ $attr['value'] }}</span>
                                                         </div>
                                                     @endforeach
